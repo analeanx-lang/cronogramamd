@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minuto a Minuto — Monster Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..125,100..900;1,75..125,100..900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#050505; --panel:#0e0e10; --panel-2:#141417; --line:#232327;
+  --text:#F4F4F2; --muted:#8b8b93; --red:#F20B49; --amber:#FFB020;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--text);font-family:'Archivo',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;padding-bottom:80px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+header{position:relative;padding:52px 0 36px;border-bottom:1px solid var(--line);overflow:hidden}
+header::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(900px 320px at 15% -10%, rgba(242,11,73,.28), transparent 65%),
+  repeating-linear-gradient(90deg, rgba(255,255,255,.028) 0 1px, transparent 1px 64px)}
+.eyebrow{position:relative;font-size:11px;letter-spacing:.32em;text-transform:uppercase;
+  font-weight:700;color:var(--red);display:flex;align-items:center;gap:10px}
+.eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--red),transparent)}
+h1{position:relative;font-size:clamp(42px,9vw,100px);line-height:.86;font-weight:900;font-style:italic;
+  font-variation-settings:'wdth' 88,'wght' 900;text-transform:uppercase;margin:16px 0 0}
+h1 em{font-style:italic;color:var(--red)}
+.sub{position:relative;margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--panel);padding:7px 14px;border-radius:999px;
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.chip.on{border-color:var(--red);color:#fff;background:rgba(242,11,73,.12)}
+.sync{position:relative;margin-top:16px;display:flex;align-items:center;gap:12px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+.dot.ok{background:#39d353;box-shadow:0 0 0 4px rgba(57,211,83,.14)}
+.dot.err{background:var(--red);box-shadow:0 0 0 4px rgba(242,11,73,.18)}
+button.reload{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 11px;border-radius:5px;cursor:pointer}
+button.reload:hover{border-color:var(--red);color:#fff}
+button.reload:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+.tabs{position:sticky;top:0;z-index:30;background:rgba(5,5,5,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line)}
+.tabs-inner{display:flex;max-width:1080px;margin:0 auto;padding:0 20px;overflow-x:auto}
+.tab{appearance:none;border:0;background:none;cursor:pointer;color:var(--muted);font-family:inherit;
+  font-size:clamp(15px,2.4vw,20px);font-weight:900;font-style:italic;white-space:nowrap;
+  font-variation-settings:'wdth' 88,'wght' 900;text-transform:uppercase;
+  padding:18px 0;margin-right:32px;border-bottom:3px solid transparent;transition:color .18s,border-color .18s}
+.tab span{font-style:normal;font-weight:400;font-size:11px;letter-spacing:.16em;display:block;margin-top:3px}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--red)}
+.tab[aria-selected="true"] span{color:var(--red)}
+.tab:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+
+.daymeta{display:flex;flex-wrap:wrap;gap:28px;padding:28px 0 8px}
+.stat b{display:block;font-size:26px;font-weight:900;font-style:italic;
+  font-variation-settings:'wdth' 88,'wght' 900;line-height:1}
+.stat i{font-style:normal;font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-top:7px}
+
+.timeline{padding:16px 0 0}
+.row{display:grid;grid-template-columns:104px 1fr;border-top:1px solid var(--line);
+  position:relative;transition:background .18s}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row:hover{background:var(--panel)}
+.row .time{padding:22px 18px 22px 0;border-right:1px solid var(--line);font-family:'JetBrains Mono',monospace}
+.time .start{font-size:19px;font-weight:700;letter-spacing:-.02em;display:block}
+.time .end{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+.time .dur{display:inline-block;margin-top:10px;font-size:10px;color:var(--red);
+  border:1px solid rgba(242,11,73,.4);padding:2px 6px;border-radius:3px;letter-spacing:.06em}
+.row .body{padding:22px 0 22px 22px}
+.desc{font-size:clamp(17px,2.6vw,23px);font-weight:800;font-style:italic;
+  font-variation-settings:'wdth' 92,'wght' 800;text-transform:uppercase;line-height:1.08}
+.speaker{margin-top:9px;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--red);text-transform:uppercase}
+.notes{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.note{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:#cfcfd4}
+.note .tag{flex:0 0 auto;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;padding:3px 7px;border-radius:3px;margin-top:1px}
+.note.conteudo .tag{background:rgba(255,255,255,.07);color:var(--muted)}
+.note.atencao .tag{background:rgba(255,176,32,.13);color:var(--amber)}
+.note.atencao{color:#ffd98a}
+.row.break{background:var(--panel-2)}
+.row.break .desc{color:var(--muted);font-variation-settings:'wdth' 88,'wght' 700}
+.row.pitch{background:linear-gradient(90deg,rgba(242,11,73,.14),transparent 70%)}
+.row.pitch::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
+
+.msg{padding:48px 0;font-size:15px;line-height:1.6;color:var(--muted)}
+.msg .t{display:block;color:var(--text);font-size:20px;font-weight:900;font-style:italic;
+  font-variation-settings:'wdth' 88,'wght' 900;text-transform:uppercase;margin-bottom:12px}
+.msg b{color:var(--text);font-weight:700}
+.msg code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--red);
+  background:var(--panel);padding:2px 6px;border-radius:4px;word-break:break-all}
+.msg ol{margin:14px 0 0 18px;display:flex;flex-direction:column;gap:8px}
+
+footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+@media (max-width:640px){
+  .row{grid-template-columns:78px 1fr}
+  .row .time{padding:18px 12px 18px 0}
+  .row .body{padding:18px 0 18px 16px}
+  .time .start{font-size:16px}
+  .daymeta{gap:20px}
+}
+@media print{
+  body{background:#fff;color:#000;padding:0}
+  .tabs,.sync,footer{display:none}
+  .panel[hidden]{display:block!important}
+  header::before{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Minuto a minuto · Run of show</div>
+    <h1>Monster<em>Day</em></h1>
+    <div class="sub">
+      <span class="chip on">27 e 28 de Julho</span>
+      <span class="chip">Alphaville · SP</span>
+      <span class="chip">Uso interno</span>
+    </div>
+    <div class="sync">
+      <span class="dot" id="dot"></span>
+      <span id="syncTxt">Carregando planilha…</span>
+      <button class="reload" id="reload" type="button">Atualizar agora</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs"><div class="tabs-inner" id="tabs" role="tablist" aria-label="Dias do evento"></div></nav>
+
+<main class="wrap">
+  <div id="panels"></div>
+  <footer>
+    <span>Monster Day · Alphaville-SP</span>
+    <span>Dados: Minuto a Minuto (Google Sheets)</span>
+  </footer>
+</main>
+
+<script>
+/* ==========================================================
+   CONFIG
+   API_URL  = Apps Script publicado como App da Web (/exec).
+              Atualiza em segundos, sem cache. Deixe preenchido.
+   CSV_URL  = fallback. Usado se API_URL estiver vazia ou falhar.
+              Cache do Google: leva de 1 a 5 min pra refletir edição.
+   ========================================================== */
+var API_URL = 'https://script.google.com/macros/s/AKfycbxt1ijyRVMua4j6Ds6pzKs3g07HTjHbkoz9YU4IjT6eyIrJY7SkaRQIPHw7IUTUPAn9/exec';
+var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Tp611sN_yE-DkbLhdkbi7ingkxjhKMumxvxdcek1gNwFR1EDCwCQ6A-qDSqohaYWCtg74Y81_lfb/pub?gid=1924725972&single=true&output=csv';
+var AUTO_MS = 5000;    // com API_URL: 5s. Sem ela, o gargalo é o cache do Google.
+
+/* ---------- CSV parser ---------- */
+function parseCSV(t){
+  var rows=[],row=[],f='',q=false,i=0;
+  t=t.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  for(;i<t.length;i++){
+    var c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++} else q=false } else f+=c }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f='' }
+    else if(c==='\n'){ row.push(f); rows.push(row); row=[]; f='' }
+    else f+=c;
+  }
+  row.push(f); rows.push(row);
+  return rows;
+}
+
+/* ---------- helpers ---------- */
+function cell(r,i){ return (r[i]||'').trim() }
+function isHeader(r){ return cell(r,0).toLowerCase()==='hora inicial' }
+function isBlank(r){ return r.every(function(c){return !(c||'').trim()}) }
+
+function fmtDur(v){
+  var m=/^(\d{1,2}):(\d{2})/.exec(v||''); if(!m) return v||'';
+  var h=+m[1],mi=+m[2];
+  if(!h) return mi+'min';
+  return h+'h'+(mi?String(mi).padStart(2,'0'):'');
+}
+function toMin(v){ var m=/^(\d{1,2}):(\d{2})/.exec(v||''); return m? (+m[1])*60+(+m[2]) : null }
+function span(a,b){
+  var s=toMin(a),e=toMin(b); if(s===null||e===null) return '';
+  var d=e-s; if(d<0) d+=1440;
+  return Math.floor(d/60)+'h'+String(d%60).padStart(2,'0');
+}
+var BREAK=/almo[çc]o|coquetel|bar do|credenciamento|intervalo|coffee|networking/i;
+var PITCH=/pitch|empilhamento/i;
+function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] }) }
+
+/* ---------- transforma linhas em dias ---------- */
+function buildDays(rows){
+  var days=[],cur=null;
+  for(var i=0;i<rows.length;i++){
+    var r=rows[i];
+    if(isHeader(r)){
+      var label='';
+      var prev=rows[i-1]||[];
+      var pa=cell(prev,0);
+      if(pa && !/^coluna\s*\d+$/i.test(pa)) label=pa;
+      cur={label:label||('Dia '+(days.length+1)),items:[]};
+      days.push(cur);
+      continue;
+    }
+    if(!cur) continue;
+    // só entra linha com horário válido na coluna A e alguma descrição
+    if(!/^\d{1,2}:\d{2}/.test(cell(r,0)) || !cell(r,3)) continue;
+    var extra=r.slice(6).map(function(c){return (c||'').trim()}).filter(Boolean).join(' · ');
+    cur.items.push({
+      start:cell(r,0), end:cell(r,1), dur:cell(r,2),
+      desc:cell(r,3), speaker:cell(r,4), atencao:cell(r,5), conteudo:extra
+    });
+  }
+  return days.filter(function(d){return d.items.length});
+}
+
+/* ---------- render ---------- */
+function renderDay(d){
+  var first=d.items[0], last=d.items[d.items.length-1];
+  var h='<div class="daymeta">'+
+    '<div class="stat"><b>'+esc(first.start)+'</b><i>Início</i></div>'+
+    '<div class="stat"><b>'+esc(last.end)+'</b><i>Encerramento</i></div>'+
+    '<div class="stat"><b>'+d.items.length+'</b><i>Blocos</i></div>'+
+    '<div class="stat"><b>'+span(first.start,last.end)+'</b><i>Duração</i></div>'+
+  '</div><div class="timeline">';
+
+  d.items.forEach(function(it){
+    var cls='row';
+    if(BREAK.test(it.desc)) cls+=' break';
+    else if(PITCH.test(it.desc)) cls+=' pitch';
+    h+='<div class="'+cls+'">'+
+      '<div class="time"><span class="start">'+esc(it.start)+'</span>'+
+      '<span class="end">'+esc(it.end)+'</span>'+
+      (it.dur?'<span class="dur">'+esc(fmtDur(it.dur))+'</span>':'')+'</div>'+
+      '<div class="body"><div class="desc">'+esc(it.desc)+'</div>'+
+      (it.speaker?'<div class="speaker">'+esc(it.speaker)+'</div>':'')+
+      ((it.conteudo||it.atencao)?'<div class="notes">'+
+        (it.conteudo?'<div class="note conteudo"><span class="tag">Conteúdo</span><span>'+esc(it.conteudo)+'</span></div>':'')+
+        (it.atencao?'<div class="note atencao"><span class="tag">Atenção</span><span>'+esc(it.atencao)+'</span></div>':'')+
+      '</div>':'')+
+      '</div></div>';
+  });
+  return h+'</div>';
+}
+
+function renderAll(days){
+  var tabs=document.getElementById('tabs'), panels=document.getElementById('panels');
+  var active=+(sessionStorage.getItem('md_day')||0);
+  if(active>=days.length) active=0;
+  tabs.innerHTML=''; panels.innerHTML='';
+
+  days.forEach(function(d,i){
+    var t=document.createElement('button');
+    t.className='tab'; t.type='button'; t.setAttribute('role','tab');
+    t.id='t'+i; t.setAttribute('aria-controls','p'+i);
+    t.setAttribute('aria-selected', i===active?'true':'false');
+    t.innerHTML=esc(d.label)+'<span>'+esc(d.items[0].start)+' — '+esc(d.items[d.items.length-1].end)+'</span>';
+    tabs.appendChild(t);
+
+    var p=document.createElement('section');
+    p.className='panel'; p.id='p'+i; p.setAttribute('role','tabpanel');
+    p.setAttribute('aria-labelledby','t'+i);
+    p.hidden = i!==active;
+    p.innerHTML=renderDay(d);
+    panels.appendChild(p);
+  });
+
+  var all=[].slice.call(tabs.children);
+  function select(i){
+    sessionStorage.setItem('md_day',i);
+    all.forEach(function(t,j){
+      t.setAttribute('aria-selected', j===i?'true':'false');
+      document.getElementById('p'+j).hidden = j!==i;
+    });
+  }
+  all.forEach(function(t,i){
+    t.addEventListener('click',function(){select(i)});
+    t.addEventListener('keydown',function(e){
+      var n = e.key==='ArrowRight'? i+1 : e.key==='ArrowLeft'? i-1 : null;
+      if(n===null) return;
+      n=(n+all.length)%all.length; all[n].focus(); select(n);
+    });
+  });
+}
+
+/* ---------- fetch ---------- */
+function status(state,txt){
+  var d=document.getElementById('dot');
+  d.className='dot'+(state?' '+state:'');
+  document.getElementById('syncTxt').textContent=txt;
+}
+function hora(){ return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) }
+function bust(u){ return u+(u.indexOf('?')>-1?'&':'?')+'_='+Date.now() }
+
+var lastSig='', fonteAtual='';
+var LOCAL = location.protocol === 'file:';
+
+function apply(rows,fonte){
+  var days=buildDays(rows);
+  if(!days.length) throw new Error('sem linhas');
+  var sig=JSON.stringify(days);
+  if(sig!==lastSig){ lastSig=sig; renderAll(days); }   // só redesenha se mudou
+  fonteAtual=fonte;
+  status('ok', fonte+' · '+hora());
+}
+
+/* JSONP: injeta uma tag de script, imune a CORS. Único caminho que funciona em file:// */
+function jsonp(url){
+  return new Promise(function(res,rej){
+    var cb='__md'+Math.random().toString(36).slice(2,10);
+    var s=document.createElement('script');
+    var t=setTimeout(function(){done();rej(new Error('timeout'))},12000);
+    function done(){ clearTimeout(t); try{delete window[cb]}catch(e){window[cb]=undefined}
+      if(s.parentNode) s.parentNode.removeChild(s) }
+    window[cb]=function(d){ done(); res(d) };
+    s.onerror=function(){ done(); rej(new Error('script bloqueado')) };
+    s.src=url+(url.indexOf('?')>-1?'&':'?')+'callback='+cb+'&_='+Date.now();
+    document.head.appendChild(s);
+  });
+}
+
+function handleApi(d){
+  if(!d || !d.ok) throw new Error((d&&d.error)||'resposta inválida');
+  apply(d.rows,'Ao vivo');
+}
+
+function apiJsonp(){ return jsonp(API_URL).then(handleApi) }
+
+function apiFetch(){
+  return fetch(bust(API_URL),{cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json() })
+    .then(handleApi);
+}
+
+function fromCsv(){
+  return fetch(bust(CSV_URL),{cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text() })
+    .then(function(t){ apply(parseCSV(t),'CSV') });
+}
+
+function fail(e){
+  status('err','Falha na leitura ('+e.message+')');
+  if(document.querySelector('.row')) return;   // já tem dados na tela, não substitui
+  document.getElementById('panels').innerHTML=
+    '<div class="msg"><span class="t">Não consegui ler a planilha</span>'+
+    (LOCAL
+      ? 'O arquivo está aberto direto do disco (<code>file://</code>) e o navegador bloqueia leitura externa nesse modo. '+
+        'O caminho por JSONP resolve isso, mas exige que o Apps Script esteja na versão nova.'
+      : 'Nenhuma das fontes respondeu.')+
+    '<ol>'+
+    '<li>No Apps Script: cole a versão atualizada do <code>.gs</code> (a que aceita <b>callback</b>) e faça '+
+    '<b>Implantar → Gerenciar implantações → lápis → Versão: Nova versão → Implantar</b>.</li>'+
+    '<li>Em <b>Quem tem acesso</b>, precisa estar <b>Qualquer pessoa</b>. Se estiver "Qualquer pessoa com Conta do Google", a leitura falha.</li>'+
+    '<li>Teste a URL <code>/exec</code> numa aba anônima: tem que abrir o JSON sem pedir login.</li>'+
+    '</ol></div>';
+}
+
+function load(){
+  if(!API_URL){ return fromCsv().catch(fail) }
+  if(LOCAL){
+    // em file:// só JSONP passa; o CSV também é bloqueado, então nem tenta
+    return apiJsonp().catch(fail);
+  }
+  return apiFetch()
+    .catch(function(){ return apiJsonp() })
+    .catch(function(){ return fromCsv() })
+    .catch(fail);
+}
+
+document.getElementById('reload').addEventListener('click',load);
+load();
+setInterval(function(){ if(!document.hidden) load() },AUTO_MS);
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) load() });
+</script>
+</body>
+</html>
