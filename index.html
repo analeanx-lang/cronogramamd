@@ -4,204 +4,147 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050505">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Minuto a Minuto — Monster Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..125,100..900;1,75..125,100..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#050505; --panel:#0d0d0f; --panel-2:#131316; --line:#212126;
-  --text:#F4F4F2; --muted:#83838c; --dim:#5a5a63;
-  --red:#F20B49; --amber:#FFB020; --green:#39d353;
+  --ink:#050505; --panel:#101013; --line:#26262c;
+  --text:#F5F5F3;      /* títulos */
+  --soft:#D8D8DE;      /* notas, texto corrido */
+  --mid:#A2A2AC;       /* horários secundários */
+  --label:#8C8C96;     /* etiquetas */
+  --red:#F20B49; --amber:#FFC048;
   --safe-b:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
-body{
-  background:var(--ink);color:var(--text);
+body{background:var(--ink);color:var(--text);
   font-family:'Archivo',system-ui,-apple-system,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:calc(120px + var(--safe-b));
-  overflow-x:hidden;
-}
-.wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  padding-bottom:calc(40px + var(--safe-b))}
+.wrap{max-width:800px;margin:0 auto;padding:0 18px}
 
-/* ---------------- HERO ---------------- */
-header{position:relative;padding:34px 0 22px;overflow:hidden}
+/* ---------- HERO ---------- */
+header{position:relative;padding:32px 0 20px;overflow:hidden}
 header::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(680px 260px at 8% -30%, rgba(242,11,73,.34), transparent 68%)}
-.top{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.kicker{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;font-weight:800;color:var(--red)}
-.live{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;
-  font-size:10px;color:var(--muted);border:1px solid var(--line);background:var(--panel);
-  padding:5px 9px;border-radius:999px;cursor:pointer}
-.live:active{border-color:var(--red)}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex:0 0 auto;transition:background .2s}
-.dot.ok{background:var(--green);animation:pulse 2.4s ease-in-out infinite}
-.dot.err{background:var(--red)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-
-h1{position:relative;font-size:clamp(38px,13vw,74px);line-height:.84;font-weight:900;font-style:italic;
-  font-variation-settings:'wdth' 85,'wght' 900;text-transform:uppercase;margin:14px 0 0;letter-spacing:-.01em}
+  background:radial-gradient(640px 240px at 6% -35%, rgba(242,11,73,.32), transparent 68%)}
+.kicker{position:relative;font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;
+  font-weight:800;color:var(--red)}
+h1{position:relative;font-size:clamp(38px,13vw,72px);line-height:.84;font-weight:900;font-style:italic;
+  font-variation-settings:'wdth' 85,'wght' 900;text-transform:uppercase;margin:12px 0 0;letter-spacing:-.01em}
 h1 em{font-style:italic;color:var(--red)}
-.meta{position:relative;margin-top:12px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
-  font-weight:700;color:var(--muted)}
+.meta{position:relative;margin-top:11px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:700;color:var(--mid)}
 .meta b{color:var(--text)}
 
-/* ---------------- DIA (segmented) ---------------- */
-.days{position:sticky;top:0;z-index:40;background:rgba(5,5,5,.94);
+/* ---------- DIAS ---------- */
+.days{position:sticky;top:0;z-index:40;background:rgba(5,5,5,.95);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   padding:10px 0 11px;border-bottom:1px solid var(--line)}
-.seg{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);
+.seg{display:flex;gap:5px;background:var(--panel);border:1px solid var(--line);
   border-radius:12px;padding:4px}
-.seg button{flex:1;appearance:none;border:0;background:none;cursor:pointer;color:var(--muted);
-  font-family:inherit;padding:11px 6px;border-radius:9px;transition:background .18s,color .18s}
+.seg button{flex:1;appearance:none;border:0;background:none;cursor:pointer;color:var(--mid);
+  font-family:inherit;padding:10px 6px;border-radius:9px}
 .seg .n{display:block;font-size:14px;font-weight:900;font-style:italic;
   font-variation-settings:'wdth' 88,'wght' 900;text-transform:uppercase;line-height:1}
-.seg .h{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;margin-top:4px;letter-spacing:.04em}
+.seg .h{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;margin-top:4px}
 .seg button[aria-selected="true"]{background:var(--red);color:#fff}
-.seg button[aria-selected="true"] .h{color:rgba(255,255,255,.78)}
+.seg button[aria-selected="true"] .h{color:rgba(255,255,255,.85)}
 .seg button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 
-/* ---------------- RESUMO DO DIA ---------------- */
-.recap{display:flex;gap:0;margin:16px 0 4px;border:1px solid var(--line);
+/* ---------- RESUMO ---------- */
+.recap{display:flex;margin:16px 0 2px;border:1px solid var(--line);
   border-radius:12px;overflow:hidden;background:var(--panel)}
-.recap div{flex:1;padding:11px 10px;text-align:center;border-right:1px solid var(--line)}
+.recap div{flex:1;padding:11px 8px;text-align:center;border-right:1px solid var(--line)}
 .recap div:last-child{border-right:0}
-.recap b{display:block;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;letter-spacing:-.02em}
-.recap i{display:block;font-style:normal;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--dim);margin-top:5px}
+.recap b{display:block;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
+  letter-spacing:-.02em;color:var(--text)}
+.recap i{display:block;font-style:normal;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--label);margin-top:5px}
 
-/* ---------------- BLOCOS ---------------- */
-.list{padding:14px 0 0;display:flex;flex-direction:column;gap:8px}
-.blk{position:relative;background:var(--panel);border:1px solid var(--line);
-  border-radius:14px;padding:15px 16px 15px 19px;overflow:hidden;
-  transition:opacity .3s,border-color .25s,background .25s;scroll-margin-top:86px}
-.blk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);transition:background .25s}
-.hr{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
-  font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:-.03em}
-.hr .arrow{color:var(--dim);font-weight:400}
-.hr .to{color:var(--muted);font-weight:400}
-.hr .dur{margin-left:auto;font-size:9.5px;font-weight:500;letter-spacing:.06em;color:var(--dim);
-  border:1px solid var(--line);padding:2px 6px;border-radius:4px;white-space:nowrap}
-.desc{margin-top:9px;font-size:17px;line-height:1.14;font-weight:800;font-style:italic;
-  font-variation-settings:'wdth' 92,'wght' 800;text-transform:uppercase}
-.who{margin-top:8px;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
-.who::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:0 0 auto}
-.notes{margin-top:11px;display:flex;flex-direction:column;gap:7px}
-.note{display:flex;gap:8px;font-size:13px;line-height:1.42;color:#c2c2c9}
-.note .tag{flex:0 0 auto;font-size:8px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
-  padding:3px 6px;border-radius:4px;margin-top:1px;height:fit-content}
-.note.ct .tag{background:rgba(255,255,255,.07);color:var(--muted)}
-.note.at{color:#ffd58a}
-.note.at .tag{background:rgba(255,176,32,.14);color:var(--amber)}
+/* ---------- PERÍODO ---------- */
+.period{display:flex;align-items:center;gap:12px;margin:26px 0 2px}
+.period span{font-size:10px;letter-spacing:.28em;text-transform:uppercase;font-weight:800;color:var(--red)}
+.period::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(242,11,73,.55),var(--line))}
 
-/* estados */
-.blk.past .hr{color:var(--dim)}
-.blk.past .hr .to,.blk.past .hr .dur{color:var(--dim)}
-.blk.past .hr::after{content:"encerrado";font-family:'Archivo',sans-serif;font-size:8px;
-  letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--dim);
-  border:1px solid var(--line);padding:3px 6px;border-radius:4px;margin-left:8px}
-.blk.pause{background:transparent;border-style:dashed}
-.blk.pause .desc{color:var(--muted);font-size:15px}
-.blk.pitch::before{background:var(--red)}
-.blk.now{border-color:var(--red);background:linear-gradient(180deg,rgba(242,11,73,.16),rgba(242,11,73,.04));
-  box-shadow:0 0 0 1px rgba(242,11,73,.35),0 14px 40px -18px rgba(242,11,73,.7)}
-.blk.now::before{background:var(--red)}
-.blk.now .desc{font-size:19px}
-.badge{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;
-  font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
-  padding:4px 9px;border-radius:5px;margin-bottom:10px}
-.badge::before{content:"";width:5px;height:5px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
-.bar{margin-top:13px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--red);border-radius:2px;transition:width 1s linear}
+/* ---------- ITENS ---------- */
+.item{display:grid;grid-template-columns:60px 1fr;column-gap:15px;padding:17px 0 18px;
+  border-bottom:1px solid var(--line);position:relative}
+.time{font-family:'JetBrains Mono',monospace;padding-top:1px}
+.time .s{display:block;font-size:15.5px;font-weight:700;letter-spacing:-.04em;color:var(--text)}
+.time .e{display:block;font-size:11.5px;color:var(--mid);margin-top:2px;letter-spacing:-.02em}
+.time .d{display:block;font-size:9.5px;color:var(--label);margin-top:9px;letter-spacing:.05em}
+.title{font-size:17.5px;line-height:1.16;font-weight:800;font-style:italic;
+  font-variation-settings:'wdth' 92,'wght' 800;text-transform:uppercase;color:var(--text)}
+.who{margin-top:9px;font-size:11.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--red)}
+.notes{margin-top:11px;display:flex;flex-direction:column;gap:9px}
+.note{font-size:13.5px;line-height:1.45;color:var(--soft)}
+.note .tag{display:inline-block;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:800;padding:3px 6px;border-radius:4px;margin-right:8px;vertical-align:1px}
+.note.ct .tag{background:rgba(255,255,255,.1);color:#BFBFC8}
+.note.at{color:#FFDFA6}
+.note.at .tag{background:rgba(255,192,72,.16);color:var(--amber)}
 
-/* ---------------- BARRA AGORA ---------------- */
-.nowbar{position:fixed;left:0;right:0;bottom:0;z-index:60;
-  background:rgba(10,10,12,.93);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-top:1px solid rgba(242,11,73,.4);
-  padding:0 0 var(--safe-b);
-  transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.nowbar.up{transform:translateY(0)}
-.nb-bar{height:2px;background:rgba(255,255,255,.08)}
-.nb-bar i{display:block;height:100%;background:var(--red);transition:width 1s linear}
-.nb-in{width:100%;appearance:none;border:0;background:none;color:inherit;font-family:inherit;
-  cursor:pointer;display:flex;align-items:center;gap:12px;padding:11px 18px 9px;text-align:left}
-.nb-l{min-width:0;flex:1}
-.nb-tag{font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:900;color:var(--red)}
-.nb-title{display:block;font-size:14.5px;font-weight:900;font-style:italic;
-  font-variation-settings:'wdth' 88,'wght' 900;text-transform:uppercase;line-height:1.1;margin-top:3px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nb-r{text-align:right;flex:0 0 auto;font-family:'JetBrains Mono',monospace}
-.nb-r b{display:block;font-size:19px;font-weight:700;letter-spacing:-.04em;line-height:1}
-.nb-r i{display:block;font-style:normal;font-size:8px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--dim);margin-top:4px}
-.nb-next{padding:0 18px 11px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nb-next b{color:var(--muted);font-weight:700}
+/* pausa: bloco sem palco */
+.item.pause{background:rgba(255,255,255,.035);border-radius:10px;
+  padding:13px 14px;margin:8px 0;border-bottom:0;column-gap:15px}
+.item.pause .title{font-size:14.5px;font-style:normal;letter-spacing:.14em;
+  font-variation-settings:'wdth' 100,'wght' 700;color:var(--soft)}
+.item.pause .time .s{font-size:14px;color:var(--soft)}
 
-/* ---------------- MENSAGEM ---------------- */
+/* pitch: marca operacional */
+.item.pitch{border-left:2px solid var(--red);padding-left:13px;margin-left:-15px}
+.item.pitch .title{color:#fff}
+
+/* ---------- MENSAGENS ---------- */
 .msg{padding:40px 0}
 .msg .t{display:block;font-size:19px;font-weight:900;font-style:italic;
   font-variation-settings:'wdth' 88,'wght' 900;text-transform:uppercase;margin-bottom:10px}
-.msg p{font-size:14px;line-height:1.6;color:var(--muted)}
-.msg ol{margin:14px 0 0 17px;display:flex;flex-direction:column;gap:9px;font-size:13.5px;
-  line-height:1.55;color:var(--muted)}
-.msg b{color:var(--text)}
+.msg p,.msg ol{font-size:14px;line-height:1.6;color:var(--soft)}
+.msg ol{margin:14px 0 0 17px;display:flex;flex-direction:column;gap:9px}
 .msg code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--red);
   background:var(--panel);padding:2px 5px;border-radius:4px;word-break:break-all}
+.skel{height:70px;border-radius:10px;background:var(--panel);margin-bottom:9px;opacity:.6}
 
-.skel{height:78px;border-radius:14px;background:linear-gradient(100deg,var(--panel) 30%,var(--panel-2) 50%,var(--panel) 70%);
-  background-size:220% 100%;animation:sh 1.3s linear infinite;margin-bottom:8px}
-@keyframes sh{to{background-position:-220% 0}}
+footer{margin-top:32px;padding:18px 0 0;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--label)}
+footer button{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--soft);
+  font-family:inherit;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
+  padding:8px 14px;border-radius:8px;cursor:pointer}
+footer button:active{border-color:var(--red);color:#fff}
 
-footer{margin-top:34px;padding:18px 0 0;border-top:1px solid var(--line);
-  font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);
-  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-
-/* ---------------- DESKTOP ---------------- */
+/* ---------- DESKTOP ---------- */
 @media (min-width:720px){
-  header{padding:52px 0 28px}
+  header{padding:50px 0 26px}
   .wrap{padding:0 28px}
-  .blk{padding:20px 24px 20px 26px;display:grid;grid-template-columns:132px 1fr;
-    column-gap:24px;align-items:start}
-  .blk .side{grid-column:1;grid-row:1 / span 4}
-  .hr{display:block;font-size:19px}
-  .hr .arrow{display:none}
-  .hr .to{display:block;font-size:12.5px;margin-top:2px}
-  .hr .dur{display:inline-block;margin:9px 0 0;font-size:10px}
-  .badge{grid-column:2;margin-bottom:8px}
-  .desc{grid-column:2;font-size:21px;margin-top:0}
-  .blk.now .desc{font-size:24px}
-  .who,.notes,.bar{grid-column:2}
-  .nowbar{left:auto;right:24px;bottom:24px;width:400px;border:1px solid rgba(242,11,73,.45);
-    border-radius:14px;overflow:hidden;transform:translateY(160%)}
-  .nowbar.up{transform:translateY(0)}
-  .desc{line-height:1.08}
+  .item{grid-template-columns:104px 1fr;column-gap:28px;padding:20px 0 21px}
+  .time .s{font-size:18px}
+  .time .e{font-size:13px}
+  .title{font-size:21px}
+  .item.pause .title{font-size:16px}
+  .item.pitch{margin-left:-20px;padding-left:18px}
 }
 
 @media print{
   body{background:#fff;color:#000;padding:0}
-  .days,.nowbar,.live,header::before{display:none}
-  .blk{break-inside:avoid;border-color:#ccc;background:none}
+  .days,footer,header::before{display:none}
   .panel[hidden]{display:block!important}
+  .item{break-inside:avoid;border-bottom:1px solid #ddd}
+  .title,.time .s,.recap b{color:#000}
+  .note,.item.pause .title{color:#333}
+  .who{color:#c2003a}
+  .item.pause{background:#f4f4f4}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap">
-    <div class="top">
-      <span class="kicker">Minuto a minuto</span>
-      <button class="live" id="live" type="button">
-        <span class="dot" id="dot"></span><span id="liveTxt">carregando</span>
-      </button>
-    </div>
+    <div class="kicker">Minuto a minuto</div>
     <h1>Monster<em>Day</em></h1>
     <div class="meta"><b>27 e 28 Jul</b> · Alphaville-SP · Uso interno</div>
   </div>
@@ -210,33 +153,19 @@ footer{margin-top:34px;padding:18px 0 0;border-top:1px solid var(--line);
 <div class="days"><div class="wrap"><div class="seg" id="seg" role="tablist" aria-label="Dias"></div></div></div>
 
 <main class="wrap">
-  <div id="panels">
-    <div class="list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
-  </div>
+  <div id="panels"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
   <footer>
-    <span>Monster Day</span><span>Fonte: planilha Minuto a Minuto</span>
+    <span id="fonte">Planilha Minuto a Minuto</span>
+    <button id="reload" type="button">Atualizar</button>
   </footer>
 </main>
 
-<div class="nowbar" id="nowbar" aria-live="polite">
-  <div class="nb-bar"><i id="nbFill" style="width:0%"></i></div>
-  <button class="nb-in" id="nbJump" type="button">
-    <span class="nb-l">
-      <span class="nb-tag" id="nbTag">Agora</span>
-      <span class="nb-title" id="nbTitle"></span>
-    </span>
-    <span class="nb-r"><b id="nbNum">--</b><i id="nbUnit">min</i></span>
-  </button>
-  <div class="nb-next" id="nbNext"></div>
-</div>
-
 <script>
-/* ==========================================================
-   CONFIG
-   ========================================================== */
+/* ================= CONFIG ================= */
 var API_URL = 'https://script.google.com/macros/s/AKfycbxt1ijyRVMua4j6Ds6pzKs3g07HTjHbkoz9YU4IjT6eyIrJY7SkaRQIPHw7IUTUPAn9/exec';
 var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5Tp611sN_yE-DkbLhdkbi7ingkxjhKMumxvxdcek1gNwFR1EDCwCQ6A-qDSqohaYWCtg74Y81_lfb/pub?gid=1924725972&single=true&output=csv';
-var AUTO_MS = 5000;
+/* A página carrega a planilha uma vez, ao abrir. Nada muda sozinho depois.
+   Para pegar alterações da planilha, toque em Atualizar (ou recarregue). */
 
 /* ---------- CSV ---------- */
 function parseCSV(t){
@@ -266,11 +195,11 @@ function spanTxt(a,b){
   var d=e-s; if(d<0)d+=1440;
   return Math.floor(d/60)+'h'+String(d%60).padStart(2,'0');
 }
+function periodo(s){ return s===null?'':(s<720?'Manhã':(s<1080?'Tarde':'Noite')) }
 var PAUSE=/almo[çc]o|coquetel|bar do|credenciamento|intervalo|coffee|networking/i;
 var PITCH=/pitch|empilhamento/i;
 function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] }) }
-function nowMin(){ var d=new Date(); return d.getHours()*60+d.getMinutes()+d.getSeconds()/60 }
 
 /* ---------- planilha -> dias ---------- */
 function buildDays(rows){
@@ -288,8 +217,7 @@ function buildDays(rows){
     var extra=r.slice(6).map(function(c){return (c||'').trim()}).filter(Boolean).join(' · ');
     cur.items.push({
       start:cell(r,0), end:cell(r,1), dur:cell(r,2), desc:cell(r,3),
-      speaker:cell(r,4), atencao:cell(r,5), conteudo:extra,
-      s:toMin(cell(r,0)), e:toMin(cell(r,1))
+      speaker:cell(r,4), atencao:cell(r,5), conteudo:extra, s:toMin(cell(r,0))
     });
   }
   return days.filter(function(d){return d.items.length});
@@ -303,38 +231,36 @@ function dayHTML(d){
     '<div><b>'+esc(l.end)+'</b><i>Termina</i></div>'+
     '<div><b>'+d.items.length+'</b><i>Blocos</i></div>'+
     '<div><b>'+spanTxt(f.start,l.end)+'</b><i>Duração</i></div>'+
-  '</div><div class="list">';
+  '</div>';
 
-  d.items.forEach(function(it,i){
-    var cls='blk';
+  var atual='';
+  d.items.forEach(function(it){
+    var p=periodo(it.s);
+    if(p && p!==atual){ atual=p; h+='<div class="period"><span>'+p+'</span></div>' }
+
+    var cls='item';
     if(PAUSE.test(it.desc)) cls+=' pause';
     else if(PITCH.test(it.desc)) cls+=' pitch';
-    h+='<article class="'+cls+'" data-s="'+it.s+'" data-e="'+it.e+'" id="b'+i+'">'+
-      '<div class="side">'+
-        '<div class="hr"><span>'+esc(it.start)+'</span><span class="arrow">→</span>'+
-        '<span class="to">'+esc(it.end)+'</span>'+
-        (it.dur?'<span class="dur">'+esc(fmtDur(it.dur))+'</span>':'')+'</div>'+
-      '</div>'+
-      '<span class="badge" hidden>Agora</span>'+
-      '<h3 class="desc">'+esc(it.desc)+'</h3>'+
-      (it.speaker?'<div class="who">'+esc(it.speaker)+'</div>':'')+
-      ((it.conteudo||it.atencao)?'<div class="notes">'+
-        (it.conteudo?'<div class="note ct"><span class="tag">Conteúdo</span><span>'+esc(it.conteudo)+'</span></div>':'')+
-        (it.atencao?'<div class="note at"><span class="tag">Atenção</span><span>'+esc(it.atencao)+'</span></div>':'')+
-      '</div>':'')+
-      '<div class="bar" hidden><i style="width:0%"></i></div>'+
-    '</article>';
+
+    h+='<div class="'+cls+'">'+
+      '<div class="time"><span class="s">'+esc(it.start)+'</span>'+
+        '<span class="e">'+esc(it.end)+'</span>'+
+        (it.dur?'<span class="d">'+esc(fmtDur(it.dur))+'</span>':'')+'</div>'+
+      '<div class="body"><div class="title">'+esc(it.desc)+'</div>'+
+        (it.speaker?'<div class="who">'+esc(it.speaker)+'</div>':'')+
+        ((it.conteudo||it.atencao)?'<div class="notes">'+
+          (it.conteudo?'<div class="note ct"><span class="tag">Conteúdo</span>'+esc(it.conteudo)+'</div>':'')+
+          (it.atencao?'<div class="note at"><span class="tag">Atenção</span>'+esc(it.atencao)+'</div>':'')+
+        '</div>':'')+
+      '</div></div>';
   });
-  return h+'</div>';
+  return h;
 }
 
-var DAYS=[], active=0, didScroll=false;
-
 function renderAll(days){
-  DAYS=days;
   var seg=document.getElementById('seg'), panels=document.getElementById('panels');
   var saved=+(sessionStorage.getItem('md_day')||0);
-  active = saved<days.length ? saved : 0;
+  var active = saved<days.length ? saved : 0;
 
   seg.innerHTML=''; panels.innerHTML='';
   days.forEach(function(d,i){
@@ -351,94 +277,26 @@ function renderAll(days){
     p.innerHTML=dayHTML(d);
     panels.appendChild(p);
   });
-  tick();
 }
 
 function pick(i){
-  active=i; sessionStorage.setItem('md_day',i);
+  sessionStorage.setItem('md_day',i);
   [].forEach.call(document.getElementById('seg').children,function(b,j){
     b.setAttribute('aria-selected', j===i?'true':'false') });
   [].forEach.call(document.querySelectorAll('.panel'),function(p,j){ p.hidden = j!==i });
-  didScroll=false; tick();
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0});
 }
 
-/* ---------- relógio: marca agora / passado / próximo ---------- */
-function tick(){
-  var panel=document.querySelectorAll('.panel')[active];
-  if(!panel || !DAYS[active]) return;
-  var items=DAYS[active].items, blks=panel.querySelectorAll('.blk');
-  var m=nowMin(), nowIdx=-1, nextIdx=-1;
-
-  for(var i=0;i<items.length;i++){
-    var it=items[i];
-    if(it.s===null||it.e===null) continue;
-    if(m>=it.s && m<it.e){ nowIdx=i; break }
-  }
-  for(var j=0;j<items.length;j++){ if(items[j].s!==null && items[j].s>m){ nextIdx=j; break } }
-
-  blks.forEach(function(b,i){
-    var it=items[i], isNow=i===nowIdx;
-    b.classList.toggle('now',isNow);
-    b.classList.toggle('past', it.e!==null && m>=it.e);
-    b.querySelector('.badge').hidden=!isNow;
-    var bar=b.querySelector('.bar');
-    bar.hidden=!isNow;
-    if(isNow){
-      var pct=Math.max(0,Math.min(100,((m-it.s)/(it.e-it.s))*100));
-      bar.firstElementChild.style.width=pct.toFixed(1)+'%';
-    }
-  });
-
-  var nb=document.getElementById('nowbar');
-  if(nowIdx>-1){
-    var it2=items[nowIdx], falta=Math.max(0,Math.round(it2.e-m));
-    document.getElementById('nbTag').textContent='Agora · '+it2.start;
-    document.getElementById('nbTitle').textContent=it2.desc;
-    document.getElementById('nbNum').textContent= falta>=60 ? Math.floor(falta/60)+'h'+String(falta%60).padStart(2,'0') : falta;
-    document.getElementById('nbUnit').textContent= falta>=60 ? 'restante' : 'min restantes';
-    document.getElementById('nbFill').style.width=
-      Math.max(0,Math.min(100,((m-it2.s)/(it2.e-it2.s))*100)).toFixed(1)+'%';
-    var nx=items[nowIdx+1];
-    document.getElementById('nbNext').innerHTML = nx
-      ? 'A seguir <b>'+esc(nx.start)+'</b> · '+esc(nx.desc)
-      : 'Último bloco do dia';
-    nb.classList.add('up');
-    document.getElementById('nbJump').onclick=function(){
-      blks[nowIdx].scrollIntoView({behavior:'smooth',block:'center'}) };
-    if(!didScroll){ didScroll=true;
-      setTimeout(function(){ blks[nowIdx].scrollIntoView({behavior:'smooth',block:'center'}) },500) }
-  }else if(nextIdx>-1 && items[nextIdx].s-m<=180){
-    var f2=Math.round(items[nextIdx].s-m);
-    document.getElementById('nbTag').textContent='Começa às '+items[nextIdx].start;
-    document.getElementById('nbTitle').textContent=items[nextIdx].desc;
-    document.getElementById('nbNum').textContent= f2>=60 ? Math.floor(f2/60)+'h'+String(f2%60).padStart(2,'0') : f2;
-    document.getElementById('nbUnit').textContent= f2>=60 ? 'para começar' : 'min para começar';
-    document.getElementById('nbFill').style.width='0%';
-    document.getElementById('nbNext').textContent='';
-    nb.classList.add('up');
-    document.getElementById('nbJump').onclick=function(){
-      blks[nextIdx].scrollIntoView({behavior:'smooth',block:'center'}) };
-  }else{
-    nb.classList.remove('up');
-  }
-}
-
-/* ---------- dados ---------- */
-function status(state,txt){
-  document.getElementById('dot').className='dot'+(state?' '+state:'');
-  document.getElementById('liveTxt').textContent=txt;
-}
-function hora(){ return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) }
+/* ---------- dados: carrega uma vez ---------- */
+var LOCAL = location.protocol==='file:';
 function bust(u){ return u+(u.indexOf('?')>-1?'&':'?')+'_='+Date.now() }
-var lastSig='', LOCAL=location.protocol==='file:';
+function nota(txt){ document.getElementById('fonte').textContent=txt }
 
 function apply(rows,fonte){
   var days=buildDays(rows);
   if(!days.length) throw new Error('sem linhas');
-  var sig=JSON.stringify(days);
-  if(sig!==lastSig){ lastSig=sig; renderAll(days) }
-  status('ok',fonte+' '+hora());
+  renderAll(days);
+  nota('Planilha lida às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+fonte);
 }
 function jsonp(url){
   return new Promise(function(res,rej){
@@ -452,16 +310,16 @@ function jsonp(url){
     document.head.appendChild(s);
   });
 }
-function handleApi(d){ if(!d||!d.ok) throw new Error((d&&d.error)||'inválido'); apply(d.rows,'ao vivo') }
+function handleApi(d){ if(!d||!d.ok) throw new Error((d&&d.error)||'inválido'); apply(d.rows,'planilha') }
 function apiFetch(){ return fetch(bust(API_URL),{cache:'no-store'})
   .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json() }).then(handleApi) }
 function fromCsv(){ return fetch(bust(CSV_URL),{cache:'no-store'})
   .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text() })
   .then(function(t){ apply(parseCSV(t),'csv') }) }
 
-function fail(e){
-  status('err','sem conexão');
-  if(document.querySelector('.blk')) return;
+function fail(){
+  nota('Falha ao ler a planilha');
+  if(document.querySelector('.item')) return;
   document.getElementById('panels').innerHTML=
     '<div class="msg"><span class="t">Não consegui ler a planilha</span>'+
     '<p>'+(LOCAL
@@ -478,11 +336,8 @@ function load(){
                    .catch(function(){ return fromCsv() }).catch(fail);
 }
 
-document.getElementById('live').addEventListener('click',load);
+document.getElementById('reload').addEventListener('click',load);
 load();
-setInterval(function(){ if(!document.hidden) load() },AUTO_MS);
-setInterval(tick,1000);
-document.addEventListener('visibilitychange',function(){ if(!document.hidden){ load(); tick() } });
 </script>
 </body>
 </html>
